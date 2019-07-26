@@ -6,11 +6,18 @@ import datetime
 import logging
 import pandas as pd
 from pathlib import Path
+import plotly
 
 # Import library of standard functions
 import lp
 # Import Vizualisation helper functions 
 import viz as vz
+
+# Save the plots
+def saveViz(df):
+	plotly.offline.plot(vz.scatterRC(df), filename = 'images/rc.html', auto_open=False)
+	plotly.offline.plot(vz.scatterWriting(df), filename = 'images/writing.html', auto_open=False)
+	plotly.offline.plot(vz.histMath(df), filename = 'images/math.html', auto_open=False)
 	
 if __name__ == '__main__':
 
@@ -24,8 +31,7 @@ if __name__ == '__main__':
 		# Get data frame and clean it
 		df = lp.cleanMarksData(lp.convertCSVToDf(source))
 		# Vizuals
-		vz.scatterRcStartEnd(df)
-		
+		saveViz(df)
 		end = time.time()
 		print('Execution Time: ' + str(round(end-start,2)) + ' secs')
 	

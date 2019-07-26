@@ -8,17 +8,39 @@ import logging
 import pandas as pd
 from pathlib import Path
 
-# Data Cleaning
-def cleanMarksData(df):
+# Clean data which is in the form of points (ex: 0.5, 2.5, 3.0)
+def cleanPointsData(df, s_col, e_col):
+	for x in df.index:
+		#roll = df.loc[x]['id']
+		start = df.loc[x][s_col]
+		end = df.loc[x][e_col]
+		m = max(0 if math.isnan(start) else start, 0 if math.isnan(end) else end)
+		if math.isnan(start):
+			df.at[x,s_col] = m
+		if math.isnan(end):
+			df.at[x,e_col] = m
+	return df
+
+# Clean data which is in the form of percentage scores
+def cleanPercentData(df, s_col, e_col):
 	for x in df.index:
 		roll = df.loc[x]['id']
-		start = df.loc[x]['rc_level_start']
-		end = df.loc[x]['rc_level_end']
-		m = max(0 if math.isnan(start) else start, 0 if math.isnan(end) else end)
-		if math.isnan(df.loc[x]['rc_level_start']):
-			df.at[x,'rc_level_start'] = m
-		if math.isnan(df.loc[x]['rc_level_end']):
-			df.at[x,'rc_level_end'] = m
+		start = df.loc[x][s_col]
+		end = df.loc[x][e_col]
+		if(pd.isnull(start)):
+			df.at[x,s_col] = end
+		if(pd.isnull(end)):
+			df.at[x,e_col] = start
+	return df
+
+# Data Cleaning
+def cleanMarksData(df):
+	# Clean RC data
+	df = cleanPointsData(df,'rc_level_start','rc_level_end')
+	# Clean Writing data
+	df = cleanPointsData(df,'writing_level_start','writing_level_end')
+	# Clean Math data
+	df = cleanPercentData(df,'math_level_start','math_level_end')
 	return df
 
 # Specify the log file and start logging
