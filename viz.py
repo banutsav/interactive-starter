@@ -4,6 +4,7 @@ from sklearn import preprocessing
 import plotly
 import plotly.express as px
 import plotly.graph_objects as go
+import plotly.offline as opy
 
 # Comparison of Math data
 def histMath(df):
@@ -16,7 +17,8 @@ def histMath(df):
 	# Reduce opacity to see both histograms
 	fig.update_traces(opacity=0.5)
 	fig.update_layout(title_text='Math Scores', xaxis_title_text='Marks %', yaxis_title_text='No. of Students')
-	return fig
+	plot = opy.plot(fig, auto_open=False, output_type='div', include_plotlyjs=False)
+	return plot
 
 # Comparison of Writing start and end levels
 def scatterWriting(df):
@@ -28,7 +30,8 @@ def scatterWriting(df):
 	fig = px.scatter(df, title='Writing Year End Scores', labels={'id':'Roll No.'}, x='id', y='writing_level_end', 
 		color='Gender', size='writing_level_change',marginal_y='box', 
 		hover_data=['writing_level_start'], hover_name='Student Name')
-	return fig
+	plot = opy.plot(fig, auto_open=False, output_type='div', include_plotlyjs=False)
+	return plot
 
 # Comparison of RC start and end levels
 def scatterRC(df):
@@ -40,4 +43,5 @@ def scatterRC(df):
 	fig = px.scatter(df, title='RC Year End Scores', labels={'id':'Roll No.'}, x='id', y='rc_level_end', 
 		color='Gender', size='rc_level_change',marginal_y='box',
 		hover_data=['rc_level_start'], hover_name='Student Name')
-	return fig
+	plot = opy.plot(fig, auto_open=False, output_type='div', include_plotlyjs=False)
+	return plot
